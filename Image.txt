@@ -1,0 +1,32 @@
+in Controller API -> Strore
+ADD 
+  TABLE_NAME::uploadImg($request, $YOUR_REQUEST_NAME->id);
+  
+  in TABLE_NAME.php
+  -----Add This Code-----
+      const profiles_path = "image";
+      const default_img = "default.jpg";
+  public static function uploadProfile($request, $id)
+    {
+        $user = TABLE_NAME::find($id);
+        if (!empty($user)) {
+
+            if ($request->hasFile('image')) {
+                // Delete Existing File
+                if (!empty($user['image'])) {
+                    $filepath = storage_path('app/public/' . TABLE_NAME::profiles_path . '/' . $user['image']);
+                    if (!empty(is_file($filepath))) {
+                        unlink($filepath);
+                        $user->image = '';
+                    }
+                }
+
+                $file = $request->file('image');
+                $filename = $user->id . "-" . strtotime('now') . '.' . $file->getClientOriginalExtension();
+
+                $file->storeAs("public/" . TABLE_NAME::profiles_path, $filename);
+                $user->image = $filename;
+                $user->save();
+            }
+        }
+    }
