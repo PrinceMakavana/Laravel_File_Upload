@@ -1,0 +1,10 @@
+    public static function getProfileImg($imgName)
+    {
+        $headers = is_file(storage_path('app/public/' . TABLE_NAME::profiles_path . '/' . $imgName));
+        if (!empty($headers)) {
+            $imgName = url('/storage/' . TABLE_NAME::profiles_path . '/' . $imgName);
+        } else {
+            $imgName = url('/images/' . TABLE_NAME::default_img);
+        }
+        return $imgName;
+    }
